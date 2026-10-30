@@ -4,32 +4,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
 <title>LEGIT PANELS ADMIN</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080808;color:white;font-family:Arial,sans-serif}
-header{padding:20px;background:#111;border-bottom:1px solid #e22;color:#ff3945;font-size:22px;font-weight:bold}
-main{max-width:850px;margin:auto;padding:20px}
-.card{background:#151515;border:1px solid #333;border-radius:12px;padding:18px;margin:16px 0}
-h2{font-size:20px}
-input{display:block;width:100%;padding:14px;margin:10px 0;background:#090909;color:white;border:1px solid #444;border-radius:8px;font-size:15px}
-button{background:#ed2733;color:white;border:0;padding:13px;border-radius:8px;font-weight:bold;cursor:pointer}
+body{
+ margin:0;background:#080808;color:white;
+ font-family:Arial,sans-serif
+}
+header{
+ padding:20px;background:#111;
+ border-bottom:1px solid #e22;
+ color:#ff3945;font-size:22px;font-weight:bold;
+}
+main{max-width:850px;margin:auto;padding:18px}
+.card{
+ background:#151515;border:1px solid #383030;
+ border-radius:13px;padding:18px;margin:16px 0;
+}
+h2{font-size:19px}
+input,textarea{
+ display:block;width:100%;padding:13px;margin:10px 0;
+ background:#090909;color:white;
+ border:1px solid #494040;border-radius:8px;
+ font-size:15px;
+}
+textarea{min-height:90px;resize:vertical}
+button{
+ background:#ed2733;color:white;border:0;
+ padding:12px;border-radius:8px;
+ font-weight:bold;cursor:pointer;
+}
 .full{width:100%;margin-top:10px}
 .secondary{background:#292929}
-.delete{background:#a51e28;padding:8px}
-.item{padding:13px 0;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.muted{color:#999;font-size:13px}
+.delete{background:#a51e28}
+.edit{background:#333}
+.item{
+ padding:14px 0;border-bottom:1px solid #333;
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;flex-wrap:wrap;
+}
+.muted{color:#999;font-size:13px;line-height:1.5}
 #dashboard{display:none}
-#status{color:#ff7777;font-size:13px}
+#status,#loginStatus{color:#ff7777;font-size:13px}
+.preview{
+ width:100%;max-width:180px;max-height:130px;
+ object-fit:cover;border-radius:9px;
+ border:1px solid #733;display:none;
+}
+.actions{display:flex;gap:7px}
+.actions button{padding:9px}
 </style>
 </head>
+
 <body>
 <header>LEGIT PANELS <small style="font-size:12px;color:#aaa">ADMIN</small></header>
 
 <main>
 <section id="login" class="card">
 <h2>Admin Login</h2>
-<p class="muted">Sign in with your registered administrator account.</p>
+<p class="muted">Sign in with your administrator account.</p>
 <input id="email" type="email" placeholder="Admin email">
 <input id="password" type="password" placeholder="Password">
 <button class="full" onclick="login()">LOGIN</button>
@@ -38,19 +73,38 @@ button{background:#ed2733;color:white;border:0;padding:13px;border-radius:8px;fo
 
 <section id="dashboard">
 <h2>Dashboard</h2>
-<p class="muted">Firebase connected admin panel</p>
+<p class="muted">Product catalogue management</p>
 
 <div class="card">
-<h2>Product Management</h2>
+<h2 id="formTitle">Add Product</h2>
+
 <input id="productName" placeholder="Product name">
-<input id="productPrice" type="number" min="0" step="0.01" placeholder="Price in ₹">
-<button class="full" onclick="addProduct()">ADD PRODUCT</button>
+<textarea id="description" placeholder="Product description"></textarea>
+
+<label class="muted">Thumbnail image URL (HTTPS)</label>
+<input id="imageUrl" type="url" placeholder="https://example.com/image.jpg">
+<img id="imagePreview" class="preview" alt="Product preview">
+
+<h3>Features</h3>
+<p class="muted">Enter one feature per line.</p>
+<textarea id="features" placeholder="Cloud Sync&#10;Secure Login&#10;Priority Support"></textarea>
+
+<h3>Duration options</h3>
+<p class="muted">One option per line, in this format: Duration | Price</p>
+<textarea id="durations" placeholder="1 Hour | 15&#10;3 Hours | 30&#10;7 Days | 250"></textarea>
+
+<label>
+<input id="available" type="checkbox" checked style="display:inline;width:auto">
+ Product available
+</label>
+
+<button class="full" onclick="saveProduct()">SAVE PRODUCT</button>
+<button class="full secondary" onclick="clearForm()">CLEAR FORM</button>
 <p id="productStatus" class="muted"></p>
 </div>
 
 <div class="card">
 <h2>Products</h2>
-<p class="muted">Live products stored in Firestore</p>
 <div id="products">Loading products...</div>
 </div>
 
@@ -64,13 +118,13 @@ button{background:#ed2733;color:white;border:0;padding:13px;border-radius:8px;fo
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyBjtH-H8FtOFCzgoD1NxdLIv3ZGriO9w9E",
-  authDomain: "legit-panels.firebaseapp.com",
-  projectId: "legit-panels",
-  storageBucket: "legit-panels.firebasestorage.app",
-  messagingSenderId: "794565207727",
-  appId: "1:794565207727:web:0a179fb0495be1fe7dd65a",
-  measurementId: "G-KQJ59QXW75"
+ apiKey: "AIzaSyBjtH-H8FtOFCzgoD1NxdLIv3ZGriO9w9E",
+ authDomain: "legit-panels.firebaseapp.com",
+ projectId: "legit-panels",
+ storageBucket: "legit-panels.firebasestorage.app",
+ messagingSenderId: "794565207727",
+ appId: "1:794565207727:web:0a179fb0495be1fe7dd65a",
+ measurementId: "G-KQJ59QXW75"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -78,20 +132,23 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-let stopProducts = null;
+const ADMIN_UID = "ozTe1X8bd4fLGbeY3FFCBWhsMMA3";
 
-function showMessage(id,message){
- document.getElementById(id).textContent=message;
+let stopProducts = null;
+let editingId = null;
+
+function message(id,text){
+ document.getElementById(id).textContent=text;
 }
 
 function login(){
- const email=document.getElementById('email').value.trim();
- const password=document.getElementById('password').value;
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
 
- showMessage('loginStatus','Signing in...');
+ message("loginStatus","Signing in...");
 
  auth.signInWithEmailAndPassword(email,password)
- .catch(error=>showMessage('loginStatus',error.message));
+ .catch(error=>message("loginStatus",error.message));
 }
 
 function logout(){
@@ -104,83 +161,202 @@ auth.onAuthStateChanged(user=>{
   stopProducts=null;
  }
 
- if(user){
-  document.getElementById('login').style.display='none';
-  document.getElementById('dashboard').style.display='block';
+ if(user && user.uid===ADMIN_UID){
+  document.getElementById("login").style.display="none";
+  document.getElementById("dashboard").style.display="block";
   loadProducts();
  }else{
-  document.getElementById('login').style.display='block';
-  document.getElementById('dashboard').style.display='none';
+  if(user) auth.signOut();
+  document.getElementById("login").style.display="block";
+  document.getElementById("dashboard").style.display="none";
  }
 });
 
 function loadProducts(){
- stopProducts=db.collection('products')
- .orderBy('createdAt','desc')
+ stopProducts=db.collection("products")
+ .orderBy("createdAt","desc")
  .onSnapshot(snapshot=>{
-  const container=document.getElementById('products');
+  const container=document.getElementById("products");
   container.replaceChildren();
 
   if(snapshot.empty){
-   container.textContent='No products added yet.';
+   container.textContent="No products added yet.";
    return;
   }
 
   snapshot.forEach(doc=>{
    const data=doc.data();
 
-   const item=document.createElement('div');
-   item.className='item';
+   const item=document.createElement("div");
+   item.className="item";
 
-   const details=document.createElement('span');
-   details.textContent=data.name+' — ₹'+data.price;
+   const details=document.createElement("div");
+   const title=document.createElement("strong");
+   title.textContent=data.name || "Unnamed product";
 
-   const button=document.createElement('button');
-   button.className='delete';
-   button.textContent='DELETE';
-   button.onclick=()=>deleteProduct(doc.id);
+   const info=document.createElement("p");
+   info.className="muted";
+   info.textContent=
+    (data.available===false ? "Unavailable" : "Available")+
+    " · "+(Array.isArray(data.durations) ?
+    data.durations.length+" duration options" : "Legacy product");
 
-   item.append(details,button);
-   container.appendChild(item);
+   details.append(title,info);
+
+   const actions=document.createElement("div");
+   actions.className="actions";
+
+   const edit=document.createElement("button");
+   edit.className="edit";
+   edit.textContent="EDIT";
+   edit.onclick=()=>editProduct(doc.id,data);
+
+   const del=document.createElement("button");
+   del.className="delete";
+   del.textContent="DELETE";
+   del.onclick=()=>deleteProduct(doc.id);
+
+   actions.append(edit,del);
+   item.append(details,actions);
+   container.append(item);
   });
  },error=>{
-  showMessage('productStatus',error.message);
+  message("productStatus",error.message);
  });
 }
 
-async function addProduct(){
- const name=document.getElementById('productName').value.trim();
- const price=Number(document.getElementById('productPrice').value);
+function parseLines(text){
+ return text.split("\n").map(x=>x.trim()).filter(Boolean);
+}
 
- if(!name || !Number.isFinite(price) || price<0){
-  showMessage('productStatus','Enter a valid name and price.');
+function parseDurations(text){
+ const lines=parseLines(text);
+ const result=[];
+
+ for(const line of lines){
+  const parts=line.split("|");
+  if(parts.length!==2) throw Error("Use Duration | Price for every line.");
+
+  const label=parts[0].trim();
+  const price=Number(parts[1].trim());
+
+  if(!label || !Number.isFinite(price) || price<0){
+   throw Error("Check your duration names and prices.");
+  }
+
+  result.push({label,price});
+ }
+
+ return result;
+}
+
+async function saveProduct(){
+ const name=document.getElementById("productName").value.trim();
+ const description=document.getElementById("description").value.trim();
+ const imageUrl=document.getElementById("imageUrl").value.trim();
+ const features=parseLines(document.getElementById("features").value);
+ const available=document.getElementById("available").checked;
+
+ if(!name){
+  message("productStatus","Enter a product name.");
   return;
  }
 
- try{
-  await db.collection('products').add({
-   name:name,
-   price:price,
-   createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  });
-
-  document.getElementById('productName').value='';
-  document.getElementById('productPrice').value='';
-  showMessage('productStatus','Product added successfully!');
- }catch(error){
-  showMessage('productStatus',error.message);
+ if(imageUrl && !imageUrl.startsWith("https://")){
+  message("productStatus","Image URL must start with https://");
+  return;
  }
+
+ let durations;
+
+ try{
+  durations=parseDurations(document.getElementById("durations").value);
+ }catch(error){
+  message("productStatus",error.message);
+  return;
+ }
+
+ const product={
+  name,
+  description,
+  imageUrl,
+  features,
+  durations,
+  available,
+  updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+ };
+
+ try{
+  if(editingId){
+   await db.collection("products").doc(editingId).update(product);
+   message("productStatus","Product updated!");
+  }else{
+   product.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+   await db.collection("products").add(product);
+   message("productStatus","Product added!");
+  }
+
+  clearForm();
+ }catch(error){
+  message("productStatus",error.message);
+ }
+}
+
+function editProduct(id,data){
+ editingId=id;
+
+ document.getElementById("formTitle").textContent="Edit Product";
+ document.getElementById("productName").value=data.name || "";
+ document.getElementById("description").value=data.description || "";
+ document.getElementById("imageUrl").value=data.imageUrl || "";
+ document.getElementById("features").value=
+  Array.isArray(data.features) ? data.features.join("\n") : "";
+ document.getElementById("durations").value=
+  Array.isArray(data.durations) ?
+  data.durations.map(x=>x.label+" | "+x.price).join("\n") :
+  "";
+ document.getElementById("available").checked=data.available!==false;
+
+ previewImage();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function clearForm(){
+ editingId=null;
+ document.getElementById("formTitle").textContent="Add Product";
+ ["productName","description","imageUrl","features","durations"]
+ .forEach(id=>document.getElementById(id).value="");
+ document.getElementById("available").checked=true;
+ document.getElementById("imagePreview").style.display="none";
 }
 
 async function deleteProduct(id){
- if(!confirm('Delete this product?'))return;
+ if(!confirm("Delete this product?")) return;
 
  try{
-  await db.collection('products').doc(id).delete();
+  await db.collection("products").doc(id).delete();
+  if(editingId===id) clearForm();
+  message("productStatus","Product deleted.");
  }catch(error){
-  showMessage('productStatus',error.message);
+  message("productStatus",error.message);
  }
 }
+
+function previewImage(){
+ const url=document.getElementById("imageUrl").value.trim();
+ const img=document.getElementById("imagePreview");
+
+ if(url.startsWith("https://")){
+  img.src=url;
+  img.style.display="block";
+ }else{
+  img.removeAttribute("src");
+  img.style.display="none";
+ }
+}
+
+document.getElementById("imageUrl")
+ .addEventListener("input",previewImage);
 </script>
 </body>
 </html>
