@@ -4,34 +4,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080808">
-<title>LEGIT PANELS - Login</title>
+<meta name="theme-color" content="#090610">
+<title>LEGIT PANELS | Login</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;min-height:100vh;display:grid;place-items:center;
- background:#080808;color:white;font-family:Arial;
+ margin:0;min-height:100vh;display:grid;
+ place-items:center;overflow:hidden;
+ background:#090610;color:white;
+ font-family:Arial,sans-serif;
+}
+.chrome{
+ position:fixed;inset:-40%;
+ background:
+ radial-gradient(ellipse at 30% 40%,#a65cff 0%,transparent 24%),
+ radial-gradient(ellipse at 65% 35%,#512080 0%,transparent 27%),
+ radial-gradient(ellipse at 55% 75%,#b9a0d5 0%,transparent 15%),
+ radial-gradient(ellipse at 75% 65%,#34104f 0%,transparent 25%),
+ #090610;
+ filter:blur(45px) contrast(1.35);
+ animation:liquid 13s ease-in-out infinite alternate;
+ z-index:-2;
+}
+.chrome:after{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(125deg,
+ transparent 30%,#ffffff35 45%,
+ transparent 52%,#a85cff55 65%,transparent 75%);
+ mix-blend-mode:screen;
+ animation:shine 8s linear infinite;
+}
+@keyframes liquid{
+ 0%{transform:translate(-5%,0) rotate(0deg) scale(1)}
+ 50%{transform:translate(4%,5%) rotate(12deg) scale(1.15)}
+ 100%{transform:translate(-2%,-5%) rotate(-10deg) scale(1.08)}
+}
+@keyframes shine{
+ 0%{transform:translateX(-35%) rotate(0deg)}
+ 100%{transform:translateX(35%) rotate(360deg)}
 }
 .card{
- width:90%;max-width:380px;padding:28px;
- background:#111;border:1px solid #e00020;
- border-radius:15px;box-shadow:0 0 22px #e0002033;
+ width:90%;max-width:380px;padding:30px;
+ background:#100d18cc;
+ backdrop-filter:blur(22px);
+ border:1px solid #b98aff66;
+ border-radius:20px;
+ box-shadow:0 0 45px #9b4dff25;
 }
-h1{text-align:center;color:#ff1838}
+h1{text-align:center;letter-spacing:3px}
+h1 span{color:#bd8aff}
 input,button{
- width:100%;padding:14px;margin-top:14px;border-radius:8px;
+ width:100%;padding:15px;margin-top:15px;
+ border-radius:10px;font-size:14px;
 }
-input{background:#080808;color:white;border:1px solid #444}
-button{background:#e00020;color:white;border:0;font-weight:bold}
-.google{background:#222;border:1px solid #555}
-p{text-align:center;color:#aaa}
-a{color:#ff4058}
-#message{font-size:13px}
+input{
+ background:#080610;color:white;
+ border:1px solid #6c4b87;
+ outline:none;
+}
+input:focus{border-color:#c29aff;box-shadow:0 0 12px #9b4dff55}
+button{
+ background:linear-gradient(110deg,#7136a8,#b17aff);
+ color:white;border:0;font-weight:bold;
+ cursor:pointer;
+}
+.google{background:#17121f;border:1px solid #777}
+p{text-align:center;color:#aaa;font-size:13px}
+a{color:#c79aff}
+#message{min-height:18px}
 </style>
 </head>
 <body>
+<div class="chrome"></div>
+
 <div class="card">
-<h1>LEGIT PANELS</h1>
+<h1>LEGIT <span>PANELS</span></h1>
 <h3>Customer Login</h3>
 
 <input id="email" type="email" placeholder="Email address">
@@ -47,7 +94,6 @@ a{color:#ff4058}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
 <script>
 const firebaseConfig = {
  apiKey: "AIzaSyBjtH-H8FtOFCzgoD1NxdLIv3ZGriO9w9E",
@@ -60,53 +106,37 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const msg = document.getElementById("message");
+const auth=firebase.auth();
+const msg=document.getElementById("message");
 
-document.getElementById("login").onclick = async () => {
- const email = document.getElementById("email").value.trim();
- const password = document.getElementById("password").value;
-
- if(!email || !password){
-   msg.textContent = "Enter email and password.";
-   return;
- }
-
+document.getElementById("login").onclick=async()=>{
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ if(!email||!password){msg.textContent="Enter email and password.";return;}
  try{
-   await auth.signInWithEmailAndPassword(email,password);
-   msg.textContent = "Login successful!";
-   msg.style.color = "#00ff80";
-   window.location.href = "index.html";
- }catch(error){
-   msg.textContent = error.message;
- }
+  await auth.signInWithEmailAndPassword(email,password);
+  msg.style.color="#55ee91";
+  msg.textContent="Login successful!";
+  setTimeout(()=>location.href="index.html",700);
+ }catch(e){msg.style.color="#ff6464";msg.textContent=e.message;}
 };
 
-document.getElementById("google").onclick = async () => {
+document.getElementById("google").onclick=async()=>{
  try{
-   const provider = new firebase.auth.GoogleAuthProvider();
-   await auth.signInWithPopup(provider);
-   window.location.href = "index.html";
- }catch(error){
-   msg.textContent = error.message;
- }
+  await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  location.href="index.html";
+ }catch(e){msg.style.color="#ff6464";msg.textContent=e.message;}
 };
 
-document.getElementById("forgot").onclick = async (e) => {
+document.getElementById("forgot").onclick=async(e)=>{
  e.preventDefault();
- const email = document.getElementById("email").value.trim();
-
- if(!email){
-   msg.textContent = "Enter your email first.";
-   return;
- }
-
+ const email=document.getElementById("email").value.trim();
+ if(!email){msg.textContent="Enter your email first.";return;}
  try{
-   await auth.sendPasswordResetEmail(email);
-   msg.textContent = "Password reset email sent!";
- }catch(error){
-   msg.textContent = error.message;
- }
+  await auth.sendPasswordResetEmail(email);
+  msg.style.color="#55ee91";
+  msg.textContent="Reset email sent!";
+ }catch(err){msg.style.color="#ff6464";msg.textContent=err.message;}
 };
 </script>
 </body>
