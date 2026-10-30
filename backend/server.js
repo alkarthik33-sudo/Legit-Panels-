@@ -1,22 +1,26 @@
 
 const express = require("express");
 const axios = require("axios");
+const path = require("path");
 
 const app = express();
 app.use(express.json());
+
+// Customer website folder
+const WWW_DIR = path.join(__dirname, "../www");
+
+// Serve customer website files
+app.use(express.static(WWW_DIR));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(WWW_DIR, "index.html"));
+});
 
 const API_URL = "https://panelstore.shop/api/v1/index.php";
 const API_KEY = process.env.RESELLER_API_KEY;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 
 // Health check
-app.get("/", (req, res) => {
-  res.json({
-    status: "online",
-    name: "LEGIT PANELS API"
-  });
-});
-
 app.get("/health", (req, res) => {
   res.json({
     status: "OK",
@@ -70,5 +74,5 @@ app.post("/api/admin/order", async (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log("LEGIT PANELS backend running");
+  console.log("LEGIT PANELS running");
 });
