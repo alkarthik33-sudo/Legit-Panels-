@@ -338,10 +338,10 @@ async function loadProducts() {
 
   showProducts(result.products);
 
- } catch (error) {
+} catch (error) {
   console.error("Product loading error:", error);
   loading.style.display = "none";
-  errorBox.textContent = "Unable to load products. Please try again.";
+  errorBox.textContent = "ERROR: " + error.message;
  }
 }
 
