@@ -9,6 +9,22 @@ const API_URL = "https://panelstore.shop/api/v1/index.php";
 const API_KEY = process.env.RESELLER_API_KEY;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 
+// Health check
+app.get("/", (req, res) => {
+  res.json({
+    status: "online",
+    name: "LEGIT PANELS API"
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.json({
+    status: "OK",
+    server: "LEGIT PANELS"
+  });
+});
+
+// Admin order
 app.post("/api/admin/order", async (req, res) => {
   try {
     if (!ADMIN_TOKEN || req.headers.authorization !== `Bearer ${ADMIN_TOKEN}`) {
