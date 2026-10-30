@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LEGIT PANELS | Admin</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080808;color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:22px;background:#111;
+ border-bottom:1px solid #292929;
+ color:#ff303b;font-size:23px;font-weight:bold;
+}
+main{padding:20px;max-width:850px;margin:auto}
+h2{font-size:23px}
+.muted{color:#999}
+.grid{
+ display:grid;grid-template-columns:repeat(2,1fr);
+ gap:12px;margin:20px 0;
+}
+.card{
+ background:#151515;border:1px solid #303030;
+ border-radius:12px;padding:18px;
+}
+.number{font-size:27px;color:#ff303b;font-weight:bold}
+label{display:block;margin:15px 0 7px;color:#bbb}
+input,select{
+ width:100%;padding:14px;background:#101010;
+ color:white;border:1px solid #444;
+ border-radius:8px;font-size:15px;
+}
+button{
+ padding:14px;background:#ed2733;color:white;
+ border:0;border-radius:8px;font-weight:bold;
+ width:100%;margin-top:15px;font-size:15px;
+}
+button:active{opacity:.8}
+.section{margin-top:30px}
+.notice{
+ padding:13px;background:#241416;
+ border:1px solid #69252b;border-radius:9px;
+ color:#ff9299;font-size:13px;line-height:1.5;
+}
+@media(max-width:400px){
+ .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>LEGIT PANELS <small style="font-size:12px;color:#aaa">ADMIN</small></header>
+<main>
+<h2>Dashboard</h2>
+<p class="muted">Welcome to your administration panel.</p>
+
+<div class="grid">
+ <div class="card">
+  <p class="muted">Total Products</p>
+  <div class="number">0</div>
+ </div>
+ <div class="card">
+  <p class="muted">Total Orders</p>
+  <div class="number">0</div>
+ </div>
+ <div class="card">
+  <p class="muted">Active Licenses</p>
+  <div class="number">0</div>
+ </div>
+ <div class="card">
+  <p class="muted">Customers</p>
+  <div class="number">0</div>
+ </div>
+</div>
+
+<div class="section card">
+<h2>Product Management</h2>
+<label>Product Name</label>
+<input id="product" placeholder="Enter product name">
+
+<label>Product Price (₹)</label>
+<input id="price" type="number" min="0" placeholder="Enter price">
+
+<button onclick="addProduct()">ADD PRODUCT</button>
+<div id="products" class="muted"></div>
+</div>
+
+<div class="section card">
+<h2>License Management</h2>
+<p class="muted">License creation will be connected to the secure backend.</p>
+<label>Customer ID</label>
+<input placeholder="Customer ID">
+<label>License Duration</label>
+<select>
+<option>1 Hour</option>
+<option>3 Hours</option>
+<option>1 Day</option>
+<option>7 Days</option>
+<option>30 Days</option>
+</select>
+<button onclick="alert('Connect the secure backend before issuing licenses.')">
+LICENSE MANAGEMENT
+</button>
+</div>
+
+<div class="section notice">
+<strong>Security notice</strong><br>
+This is the dashboard interface preview. Product data is temporary.
+Real admin authentication, customer records and license generation
+must be connected to a protected online backend.
+</div>
+</main>
+
+<script>
+function addProduct(){
+ const name=document.getElementById('product').value.trim();
+ const price=document.getElementById('price').value;
+ if(!name || price==='' || Number(price)<0){
+  alert('Enter a valid product name and price.');
+  return;
+ }
+ const item=document.createElement('p');
+ item.textContent=name+' — ₹'+price;
+ document.getElementById('products').appendChild(item);
+ document.getElementById('product').value='';
+ document.getElementById('price').value='';
+}
+</script>
+</body>
+  </html>
