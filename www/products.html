@@ -18,8 +18,7 @@
 body{
  margin:0;background:var(--bg);color:white;
  font-family:Arial,sans-serif;
- min-height:100vh;
- overflow-x:hidden;
+ min-height:100vh;overflow-x:hidden;
 }
 body:before,body:after{
  content:"";position:fixed;border-radius:50%;
@@ -41,8 +40,7 @@ body:after{
 header{
  position:sticky;top:0;z-index:10;
  display:flex;align-items:center;justify-content:space-between;
- padding:18px 20px;
- background:#100b18e8;
+ padding:18px 20px;background:#100b18e8;
  backdrop-filter:blur(18px);
  border-bottom:1px solid #a855f744;
 }
@@ -53,8 +51,7 @@ header{
 .back{
  color:white;text-decoration:none;
  border:1px solid #a855f766;
- padding:9px 13px;border-radius:8px;
- font-size:12px;
+ padding:9px 13px;border-radius:8px;font-size:12px;
 }
 main{max-width:600px;margin:auto;padding:20px}
 .heading{margin:25px 0}
@@ -67,12 +64,10 @@ h1{
  text-shadow:0 0 18px #a855f766;
 }
 .subtitle{color:#a99ab5;font-size:13px;line-height:1.7}
-#products{
- display:flex;flex-direction:column;gap:22px;
-}
+#products{display:flex;flex-direction:column;gap:22px}
 .product{
- position:relative;overflow:hidden;
- padding:17px;border-radius:19px;
+ position:relative;overflow:hidden;padding:17px;
+ border-radius:19px;
  background:linear-gradient(145deg,#261634ee,#100b17f5);
  border:1px solid #a855f766;
  box-shadow:0 8px 35px #0008,0 0 18px #a855f71c;
@@ -90,15 +85,10 @@ h1{
 }
 .product h2{
  font-size:23px;letter-spacing:1px;
- margin:16px 0 8px;
- text-shadow:0 0 12px #a855f7;
+ margin:16px 0 8px;text-shadow:0 0 12px #a855f7;
 }
-.description{
- color:#b5a6c0;font-size:13px;line-height:1.7;
-}
-.features{
- display:flex;flex-wrap:wrap;gap:7px;margin:13px 0;
-}
+.description{color:#b5a6c0;font-size:13px;line-height:1.7}
+.features{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0}
 .feature{
  background:#a855f71c;border:1px solid #a855f744;
  border-radius:20px;padding:7px 10px;
@@ -106,20 +96,17 @@ h1{
 }
 .duration-label{
  color:#cba2f3;font-size:11px;
- letter-spacing:1px;font-weight:bold;
- margin:18px 0 8px;
+ letter-spacing:1px;font-weight:bold;margin:18px 0 8px;
 }
 select{
- width:100%;padding:14px;
- color:white;background:#100b18;
+ width:100%;padding:14px;color:white;background:#100b18;
  border:1px solid #9651c9;border-radius:9px;
  font-size:14px;outline:none;
 }
 select option{background:#160d20;color:white}
 .price-row{
  display:flex;align-items:center;
- justify-content:space-between;
- margin:19px 0;
+ justify-content:space-between;margin:19px 0;
 }
 .price-label{color:#a99ab5;font-size:12px}
 .price{
@@ -127,8 +114,7 @@ select option{background:#160d20;color:white}
  text-shadow:0 0 13px #ffffff55;
 }
 .buy{
- width:100%;padding:15px;
- border:1px solid #e3c3ff;
+ width:100%;padding:15px;border:1px solid #e3c3ff;
  border-radius:7px;
  background:linear-gradient(110deg,
  #fff 0%,#fff 47%,#7025b8 48%,#bd79ff 100%);
@@ -138,30 +124,18 @@ select option{background:#160d20;color:white}
  cursor:pointer;transition:.25s;
 }
 .buy:active{transform:scale(.97)}
-.buy:disabled{
- opacity:.5;cursor:not-allowed;
-}
-.status{
- margin-top:12px;font-size:12px;
- color:#cba2f3;min-height:15px;
-}
+.buy:disabled{opacity:.5;cursor:not-allowed}
+.status{margin-top:12px;font-size:12px;color:#cba2f3;min-height:15px}
 #empty{
- display:none;text-align:center;
- padding:55px 20px;
+ display:none;text-align:center;padding:55px 20px;
  border:1px dashed #a855f766;
  border-radius:18px;background:#180e2088;
 }
 #empty h2{color:white}
 #empty p{color:#ad9cba;font-size:13px}
-#loading{
- text-align:center;padding:50px 10px;
- color:#d0a4ff;
-}
+#loading{text-align:center;padding:50px 10px;color:#d0a4ff}
 #error{color:#ff6868;text-align:center}
-footer{
- text-align:center;padding:35px 10px;
- color:#887795;font-size:11px;
-}
+footer{text-align:center;padding:35px 10px;color:#887795;font-size:11px}
 </style>
 </head>
 
@@ -199,7 +173,6 @@ footer{
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -214,138 +187,166 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const auth=firebase.auth();
-const db=firebase.firestore();
+const auth = firebase.auth();
+const API_BASE = "https://legit-panels-api.onrender.com";
 
-const container=document.getElementById("products");
-const loading=document.getElementById("loading");
-const empty=document.getElementById("empty");
-const errorBox=document.getElementById("error");
+const container = document.getElementById("products");
+const loading = document.getElementById("loading");
+const empty = document.getElementById("empty");
+const errorBox = document.getElementById("error");
 
-let currentUser=null;
+let currentUser = null;
 
-auth.onAuthStateChanged(user=>{
- currentUser=user;
+auth.onAuthStateChanged(user => {
+ currentUser = user;
 });
 
-function element(tag,className,text){
- const el=document.createElement(tag);
- if(className)el.className=className;
- if(text!==undefined)el.textContent=text;
+function element(tag, className, text) {
+ const el = document.createElement(tag);
+ if (className) el.className = className;
+ if (text !== undefined) el.textContent = text;
  return el;
 }
 
-function showProducts(snapshot){
+function showProducts(products) {
  container.replaceChildren();
- let count=0;
+ let count = 0;
 
- snapshot.forEach(doc=>{
-  const data=doc.data();
-
-  if(data.available!==true)return;
-  if(!data.name)return;
+ products.forEach(data => {
+  if (data.available === false || !data.name) return;
 
   count++;
 
-  const durations=Array.isArray(data.durations)
-   ?data.durations.filter(x=>
-      x && typeof x.label==="string" &&
+  const durations = Array.isArray(data.durations)
+   ? data.durations.filter(x =>
+      x &&
+      typeof x.label === "string" &&
       Number.isFinite(Number(x.price)) &&
-      Number(x.price)>=0
-    ):[];
+      Number(x.price) >= 0
+     )
+   : [];
 
-  const card=element("article","product");
+  const card = element("article", "product");
 
-  if(data.imageUrl && data.imageUrl.startsWith("https://")){
-   const img=element("img","product-image");
-   img.src=data.imageUrl;
-   img.alt=data.name;
-   img.loading="lazy";
-   img.onerror=()=>img.remove();
+  if (data.imageUrl && data.imageUrl.startsWith("https://")) {
+   const img = element("img", "product-image");
+   img.src = data.imageUrl;
+   img.alt = data.name;
+   img.loading = "lazy";
+   img.onerror = () => img.remove();
    card.append(img);
   }
 
-  card.append(element("h2","",data.name));
+  card.append(element("h2", "", data.name));
 
-  if(data.description){
-   card.append(element("p","description",data.description));
+  if (data.description) {
+   card.append(element("p", "description", data.description));
   }
 
-  if(Array.isArray(data.features) && data.features.length){
-   const features=element("div","features");
-   data.features.forEach(feature=>{
-    features.append(element("span","feature",feature));
+  if (Array.isArray(data.features) && data.features.length) {
+   const features = element("div", "features");
+
+   data.features.forEach(feature => {
+    features.append(element("span", "feature", feature));
    });
+
    card.append(features);
   }
 
-  card.append(element("div","duration-label","SELECT DURATION"));
+  card.append(element("div", "duration-label", "SELECT DURATION"));
 
-  const select=element("select");
-  select.setAttribute("aria-label","Select duration");
+  const select = element("select");
+  select.setAttribute("aria-label", "Select duration");
 
-  if(durations.length){
-   durations.forEach((duration,i)=>{
-    const option=element("option","",
-      duration.label+" — ₹"+Number(duration.price));
-    option.value=String(i);
-    select.append(option);
-   });
-  }else{
-   const option=element("option","","No durations available");
+  durations.forEach((duration, i) => {
+   const option = element(
+    "option",
+    "",
+    duration.label + " — ₹" + Number(duration.price)
+   );
+   option.value = String(i);
    select.append(option);
-   select.disabled=true;
+  });
+
+  if (!durations.length) {
+   select.append(element("option", "", "Unavailable"));
+   select.disabled = true;
   }
 
   card.append(select);
 
-  const priceRow=element("div","price-row");
-  priceRow.append(element("span","price-label","YOUR PRICE"));
+  const priceRow = element("div", "price-row");
+  priceRow.append(element("span", "price-label", "YOUR PRICE"));
 
-  const price=element("span","price",
-   durations.length?"₹"+Number(durations[0].price):"—");
+  const price = element(
+   "span",
+   "price",
+   durations.length ? "₹" + Number(durations[0].price) : "—"
+  );
 
   priceRow.append(price);
   card.append(priceRow);
 
-  select.addEventListener("change",()=>{
-   const selected=durations[Number(select.value)];
-   price.textContent=selected?"₹"+Number(selected.price):"—";
+  select.addEventListener("change", () => {
+   const selected = durations[Number(select.value)];
+   price.textContent = selected
+    ? "₹" + Number(selected.price)
+    : "—";
   });
 
-  const buy=element("button","buy","BUY");
-  const status=element("p","status","");
+  const buy = element("button", "buy", "BUY");
+  const status = element("p", "status", "");
 
-  buy.disabled=!durations.length;
+  buy.disabled = !durations.length;
 
-  buy.addEventListener("click",()=>{
-   if(!currentUser){
-    status.textContent="Please log in to continue.";
-    status.style.color="#ff7777";
+  buy.addEventListener("click", () => {
+   if (!currentUser) {
+    status.textContent = "Please log in to continue.";
+    status.style.color = "#ff7777";
     return;
    }
 
-   status.textContent=
-    "Checkout is being connected. No payment has been taken.";
-   status.style.color="#cba2f3";
+   status.textContent =
+    "Checkout is coming soon. No payment has been taken.";
+   status.style.color = "#cba2f3";
   });
 
-  card.append(buy,status);
+  card.append(buy, status);
   container.append(card);
  });
 
- loading.style.display="none";
- empty.style.display=count===0?"block":"none";
+ loading.style.display = "none";
+ empty.style.display = count === 0 ? "block" : "none";
 }
 
-db.collection("products")
- .onSnapshot(showProducts,err=>{
-  loading.style.display="none";
-  errorBox.textContent="Unable to load products. Please try again.";
-  console.error(err);
- });
+async function loadProducts() {
+ try {
+  loading.style.display = "block";
+  errorBox.textContent = "";
+
+  const response = await fetch(API_BASE + "/api/products");
+  if (!response.ok) {
+   throw new Error("Backend returned HTTP " + response.status);
+  }
+
+  const result = await response.json();
+
+  if (result.status !== "success" ||
+      !Array.isArray(result.products)) {
+   throw new Error("Invalid product response");
+  }
+
+  showProducts(result.products);
+
+ } catch (error) {
+  console.error("Product loading error:", error);
+  loading.style.display = "none";
+  errorBox.textContent = "Unable to load products. Please try again.";
+ }
+}
+
+loadProducts();
 </script>
 
 </body>
-  </html>
-  
+</html>
