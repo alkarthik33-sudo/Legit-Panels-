@@ -4,12 +4,24 @@ const axios = require("axios");
 const path = require("path");
 
 const app = express();
+
 app.use(express.json());
 
-// Customer website folder
-const WWW_DIR = path.join(__dirname, "../www");
+// Allow customer website requests
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-// Serve customer website files
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
+// Customer website files
+const WWW_DIR = path.join(__dirname, "../www");
 app.use(express.static(WWW_DIR));
 
 app.get("/", (req, res) => {
@@ -28,10 +40,37 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Admin order
+// Customer product list
+app.get("/api/products", (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+
+  res.json({
+    status: "success",
+    products: [
+      {
+        id: "phantom",
+        name: "PHANTOM",
+        description: "Premium 1 Hour access",
+        imageUrl: "",
+        features: ["1 Hour Access"],
+        durations: [
+          {
+            label: "1 Hour",
+            price: 18
+          }
+        ]
+      }
+    ]
+  });
+});
+
+// Admin order route — unchanged
 app.post("/api/admin/order", async (req, res) => {
   try {
-    if (!ADMIN_TOKEN || req.headers.authorization !== `Bearer ${ADMIN_TOKEN}`) {
+    if (
+      !ADMIN_TOKEN ||
+      req.headers.authorization !== `Bearer ${ADMIN_TOKEN}`
+    ) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
@@ -69,7 +108,9 @@ app.post("/api/admin/order", async (req, res) => {
 
   } catch (error) {
     console.error("Reseller error:", error.message);
-    res.status(502).json({ error: "Reseller API unavailable" });
+    res.status(502).json({
+      error: "Reseller API unavailable"
+    });
   }
 });
 
