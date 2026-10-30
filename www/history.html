@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090610">
+<title>LEGIT PANELS | Purchase History</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;overflow-x:hidden;
+ background:#090610;color:white;
+ font-family:Arial,sans-serif;
+}
+.chrome{
+ position:fixed;inset:-40%;pointer-events:none;
+ background:
+ radial-gradient(ellipse at 30% 40%,#a65cff 0%,transparent 24%),
+ radial-gradient(ellipse at 65% 35%,#512080 0%,transparent 27%),
+ radial-gradient(ellipse at 55% 75%,#b9a0d5 0%,transparent 15%),
+ radial-gradient(ellipse at 75% 65%,#34104f 0%,transparent 25%),
+ #090610;
+ filter:blur(45px) contrast(1.35);
+ animation:liquid 13s ease-in-out infinite alternate;
+ z-index:-2;
+}
+.chrome:after{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(125deg,
+ transparent 30%,#ffffff35 45%,
+ transparent 52%,#a85cff55 65%,transparent 75%);
+ mix-blend-mode:screen;
+ animation:shine 8s linear infinite;
+}
+@keyframes liquid{
+ 0%{transform:translate(-5%,0) rotate(0deg) scale(1)}
+ 50%{transform:translate(4%,5%) rotate(12deg) scale(1.15)}
+ 100%{transform:translate(-2%,-5%) rotate(-10deg) scale(1.08)}
+}
+@keyframes shine{
+ 0%{transform:translateX(-35%) rotate(0deg)}
+ 100%{transform:translateX(35%) rotate(360deg)}
+}
+header{
+ position:sticky;top:0;z-index:5;
+ display:flex;align-items:center;justify-content:space-between;
+ padding:18px 20px;
+ background:#100b18dd;backdrop-filter:blur(20px);
+ border-bottom:1px solid #a855f744;
+}
+.logo{
+ font-size:20px;font-weight:1000;letter-spacing:1px;
+ text-shadow:0 0 13px #a855f7;
+}
+.back{
+ color:white;text-decoration:none;font-size:12px;
+ border:1px solid #a855f777;border-radius:8px;
+ padding:10px 13px;
+}
+main{width:92%;max-width:650px;margin:30px auto}
+.tag{
+ color:#c58aff;font-size:10px;
+ letter-spacing:4px;font-weight:bold;
+}
+h1{
+ font-size:29px;letter-spacing:1px;
+ margin:12px 0;text-shadow:0 0 17px #a855f766;
+}
+.subtitle{font-size:13px;color:#b5a6c0;line-height:1.6}
+#loading,#empty,#error{
+ text-align:center;padding:35px 15px;
+ color:#c9a2ed;font-size:13px;
+}
+#error{color:#ff7777}
+#empty{
+ display:none;border:1px dashed #a855f766;
+ border-radius:16px;background:#160d20aa;
+}
+#history{display:flex;flex-direction:column;gap:15px;margin-top:24px}
+.purchase{
+ padding:19px;border-radius:17px;
+ background:linear-gradient(145deg,#261634ee,#100b17f5);
+ border:1px solid #a855f766;
+ box-shadow:0 8px 30px #0008,0 0 18px #a855f71b;
+ animation:appear .4s ease both;
+}
+@keyframes appear{
+ from{opacity:0;transform:translateY(10px)}
+ to{opacity:1;transform:translateY(0)}
+}
+.product-name{
+ font-size:20px;font-weight:900;
+ color:white;text-shadow:0 0 12px #a855f7;
+ margin-bottom:14px;
+}
+.detail{
+ font-size:13px;color:#c5b5d0;
+ line-height:1.7;margin-top:7px;
+ overflow-wrap:anywhere;
+}
+.detail strong{color:#fff;font-weight:700}
+.key-value{
+ margin-top:8px;padding:12px;
+ background:#090610aa;border:1px solid #704393;
+ border-radius:9px;color:#fff;
+ font-size:14px;font-weight:bold;
+ letter-spacing:.5px;overflow-wrap:anywhere;
+}
+.copy{
+ width:100%;margin-top:15px;padding:14px;
+ border:0;border-radius:7px;
+ background:linear-gradient(110deg,#fff 0%,#fff 47%,#7136a8 48%,#b17aff 100%);
+ color:#210d32;font-size:13px;font-weight:1000;
+ letter-spacing:1.5px;cursor:pointer;
+ clip-path:polygon(0 0,100% 0,95% 100%,0 100%);
+}
+.copy:active{transform:scale(.98)}
+.copy:disabled{opacity:.6}
+.copy-message{
+ min-height:15px;margin-top:8px;
+ font-size:11px;color:#65ed9a;
+}
+footer{
+ text-align:center;padding:35px 10px;
+ color:#887795;font-size:11px;
+}
+</style>
+</head>
+
+<body>
+<div class="chrome"></div>
+
+<header>
+ <div class="logo">LEGIT PANELS</div>
+ <a href="index.html" class="back">← DASHBOARD</a>
+</header>
+
+<main>
+ <div class="tag">YOUR ACCOUNT</div>
+ <h1>PURCHASE HISTORY</h1>
+ <p class="subtitle">
+ Your purchased keys, newest first.
+ You can copy any previously issued key again.
+ </p>
+
+ <div id="loading">LOADING YOUR PURCHASES...</div>
+ <div id="error"></div>
+ <section id="history"></section>
+
+ <section id="empty">
+  <h3>NO PURCHASES YET</h3>
+  <p>Your successfully issued keys will appear here.</p>
+ </section>
+</main>
+
+<footer>
+ LEGIT PANELS © 2026
+ <p>YOUR PURCHASES. YOUR KEYS.</p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig={
+ apiKey:"AIzaSyBjtH-H8FtOFCzgoD1NxdLIv3ZGriO9w9E",
+ authDomain:"legit-panels.firebaseapp.com",
+ projectId:"legit-panels",
+ storageBucket:"legit-panels.firebasestorage.app",
+ messagingSenderId:"794565207727",
+ appId:"1:794565207727:web:0a179fb0495be1fe7dd65a",
+ measurementId:"G-KQJ59QXW75"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth=firebase.auth();
+const db=firebase.firestore();
+
+const loading=document.getElementById("loading");
+const historyBox=document.getElementById("history");
+const empty=document.getElementById("empty");
+const errorBox=document.getElementById("error");
+
+function makeElement(tag,className,text){
+ const el=document.createElement(tag);
+ if(className)el.className=className;
+ if(text!==undefined)el.textContent=text;
+ return el;
+}
+
+function formatPurchaseTime(value){
+ let date=null;
+
+ if(value && typeof value.toDate==="function"){
+  date=value.toDate();
+ }else if(value instanceof Date){
+  date=value;
+ }else if(value){
+  date=new Date(value);
+ }
+
+ if(!date || isNaN(date.getTime()))return "Date unavailable";
+
+ return new Intl.DateTimeFormat("en-IN",{
+  hour:"2-digit",
+  minute:"2-digit",
+  second:"2-digit",
+  hour12:true,
+  day:"2-digit",
+  month:"2-digit",
+  year:"numeric"
+ }).format(date);
+}
+
+function showPurchase(doc){
+ const data=doc.data();
+
+ // Only display records containing an issued key.
+ if(typeof data.key!=="string" || !data.key.trim())return null;
+
+ const card=makeElement("article","purchase");
+
+ card.append(makeElement(
+  "div","product-name",data.productName || data.name || "Purchased product"
+ ));
+
+ card.append(makeElement(
+  "div","detail","Duration — "+(data.duration || "Not specified")
+ ));
+
+ card.append(makeElement("div","detail","Key"));
+
+ card.append(makeElement("div","key-value",data.key));
+
+ card.append(makeElement(
+  "div","detail","Time/Date — "+formatPurchaseTime(data.createdAt)
+ ));
+
+ const copy=makeElement("button","copy","COPY KEY");
+ const message=makeElement("div","copy-message","");
+
+ copy.addEventListener("click",async()=>{
+  copy.disabled=true;
+  try{
+   await navigator.clipboard.writeText(data.key);
+   message.textContent="KEY COPIED SUCCESSFULLY";
+  }catch(err){
+   message.textContent="Copy unavailable. Select and copy the key above.";
+   message.style.color="#ff7777";
+  }
+  copy.disabled=false;
+ });
+
+ card.append(copy,message);
+ return card;
+}
+
+auth.onAuthStateChanged(async user=>{
+ if(!user){
+  location.replace("login.html");
+  return;
+ }
+
+ try{
+  const snapshot=await db.collection("purchases")
+   .where("uid","==",user.uid)
+   .orderBy("createdAt","desc")
+   .get();
+
+  historyBox.replaceChildren();
+
+  let count=0;
+
+  snapshot.forEach(doc=>{
+   const card=showPurchase(doc);
+   if(card){
+    historyBox.append(card);
+    count++;
+   }
+  });
+
+  loading.style.display="none";
+  empty.style.display=count===0?"block":"none";
+
+ }catch(err){
+  console.error(err);
+  loading.style.display="none";
+  errorBox.textContent=
+   "Couldn't load purchase history. Check your connection or database permissions.";
+ }
+});
+</script>
+</body>
+  </html>
+  
