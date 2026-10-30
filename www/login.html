@@ -3,58 +3,111 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080808">
 <title>LEGIT PANELS - Login</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- min-height:100vh;
- display:grid;
- place-items:center;
- background:#080808;
- color:white;
- font-family:Arial,sans-serif;
+ margin:0;min-height:100vh;display:grid;place-items:center;
+ background:#080808;color:white;font-family:Arial;
 }
 .card{
- width:90%;
- max-width:380px;
- padding:28px;
- background:#111;
- border:1px solid #e00020;
- border-radius:15px;
- box-shadow:0 0 20px #e0002033;
+ width:90%;max-width:380px;padding:28px;
+ background:#111;border:1px solid #e00020;
+ border-radius:15px;box-shadow:0 0 22px #e0002033;
 }
 h1{text-align:center;color:#ff1838}
 input,button{
- width:100%;
- padding:14px;
- margin-top:14px;
- border-radius:8px;
+ width:100%;padding:14px;margin-top:14px;border-radius:8px;
 }
-input{
- background:#080808;
- color:white;
- border:1px solid #444;
-}
-button{
- background:#e00020;
- color:white;
- border:0;
- font-weight:bold;
-}
+input{background:#080808;color:white;border:1px solid #444}
+button{background:#e00020;color:white;border:0;font-weight:bold}
+.google{background:#222;border:1px solid #555}
 p{text-align:center;color:#aaa}
 a{color:#ff4058}
+#message{font-size:13px}
 </style>
 </head>
 <body>
 <div class="card">
 <h1>LEGIT PANELS</h1>
 <h3>Customer Login</h3>
-<input type="email" placeholder="Email address">
-<input type="password" placeholder="Password">
-<button>LOGIN</button>
+
+<input id="email" type="email" placeholder="Email address">
+<input id="password" type="password" placeholder="Password">
+
+<button id="login">LOGIN</button>
+<button class="google" id="google">CONTINUE WITH GOOGLE</button>
+
+<p id="message"></p>
+<p><a href="#" id="forgot">Forgot password?</a></p>
 <p>New customer? <a href="signup.html">Create account</a></p>
 </div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+ apiKey: "AIzaSyBjtH-H8FtOFCzgoD1NxdLIv3ZGriO9w9E",
+ authDomain: "legit-panels.firebaseapp.com",
+ projectId: "legit-panels",
+ storageBucket: "legit-panels.firebasestorage.app",
+ messagingSenderId: "794565207727",
+ appId: "1:794565207727:web:0a179fb0495be1fe7dd65a",
+ measurementId: "G-KQJ59QXW75"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const msg = document.getElementById("message");
+
+document.getElementById("login").onclick = async () => {
+ const email = document.getElementById("email").value.trim();
+ const password = document.getElementById("password").value;
+
+ if(!email || !password){
+   msg.textContent = "Enter email and password.";
+   return;
+ }
+
+ try{
+   await auth.signInWithEmailAndPassword(email,password);
+   msg.textContent = "Login successful!";
+   msg.style.color = "#00ff80";
+   window.location.href = "index.html";
+ }catch(error){
+   msg.textContent = error.message;
+ }
+};
+
+document.getElementById("google").onclick = async () => {
+ try{
+   const provider = new firebase.auth.GoogleAuthProvider();
+   await auth.signInWithPopup(provider);
+   window.location.href = "index.html";
+ }catch(error){
+   msg.textContent = error.message;
+ }
+};
+
+document.getElementById("forgot").onclick = async (e) => {
+ e.preventDefault();
+ const email = document.getElementById("email").value.trim();
+
+ if(!email){
+   msg.textContent = "Enter your email first.";
+   return;
+ }
+
+ try{
+   await auth.sendPasswordResetEmail(email);
+   msg.textContent = "Password reset email sent!";
+ }catch(error){
+   msg.textContent = error.message;
+ }
+};
+</script>
 </body>
 </html>
