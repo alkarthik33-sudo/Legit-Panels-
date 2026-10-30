@@ -4,8 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#10051c">
-<title>LEGIT PANELS</title>
+<meta name="theme-color" content="#09060f">
+<title>LEGIT PANELS | Dashboard</title>
 
 <style>
 *{box-sizing:border-box}
@@ -14,292 +14,273 @@
   --purple:#a855f7;
   --grape:#7025b8;
   --white:#fff;
-  --bg:#08050d;
+  --bg:#09060f;
 }
 
 body{
   margin:0;
+  min-height:100vh;
   background:var(--bg);
   color:white;
   font-family:Arial,sans-serif;
   overflow-x:hidden;
-  min-height:100vh;
 }
 
-/* LIQUID CHROME BACKGROUND */
-
-body:before{
+body:before,body:after{
   content:"";
   position:fixed;
-  width:450px;
-  height:450px;
-  top:10%;
-  left:-180px;
-  background:radial-gradient(
-    circle,
-    #b65cff55,
-    #7624b855 35%,
-    transparent 70%
-  );
-  filter:blur(45px);
-  animation:liquid 9s ease-in-out infinite alternate;
+  width:390px;
+  height:390px;
+  border-radius:50%;
+  filter:blur(85px);
   pointer-events:none;
   z-index:-1;
+}
+
+body:before{
+  background:#8526c755;
+  top:5%;
+  left:-190px;
+  animation:liquid 12s ease-in-out infinite alternate;
 }
 
 body:after{
-  content:"";
-  position:fixed;
-  width:400px;
-  height:400px;
-  right:-170px;
+  background:#a855f744;
+  right:-190px;
   bottom:0;
-  background:radial-gradient(
-    circle,
-    #a855f755,
-    #46116f55 40%,
-    transparent 70%
-  );
-  filter:blur(55px);
-  animation:liquid 11s ease-in-out infinite alternate-reverse;
-  pointer-events:none;
-  z-index:-1;
+  animation:liquid 14s ease-in-out infinite alternate-reverse;
 }
 
 @keyframes liquid{
-  0%{transform:translate(0,0) scale(1)}
-  50%{transform:translate(100px,70px) scale(1.3)}
-  100%{transform:translate(-30px,120px) scale(.9)}
+  to{transform:translate(100px,120px) scale(1.35)}
 }
 
 /* HEADER */
 
 header{
-  height:75px;
+  height:70px;
   padding:0 20px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  background:#100b18bb;
+  background:#100b18cc;
   backdrop-filter:blur(20px);
   border-bottom:1px solid #a855f733;
-  position:sticky;
-  top:0;
-  z-index:10;
 }
 
 .logo{
-  font-size:23px;
+  font-size:21px;
   font-weight:1000;
   letter-spacing:1px;
-  color:white;
-  animation:logoGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes logoGlow{
-  from{text-shadow:0 0 5px white,0 0 12px #a855f7}
-  to{text-shadow:0 0 12px white,0 0 30px #a855f7}
+  text-shadow:0 0 15px #a855f7;
 }
 
 .menu{
-  color:white;
   font-size:25px;
   cursor:pointer;
+  color:#d9b5ff;
 }
 
 /* MAIN */
 
 main{
   width:100%;
-  max-width:520px;
+  max-width:500px;
   margin:auto;
   padding:20px;
 }
 
-.hero{
-  margin-top:15px;
-  padding:35px 22px;
-  border-radius:20px;
-  background:linear-gradient(135deg,#35104f99,#100b18cc);
-  border:1px solid #bd75ff55;
-  box-shadow:0 0 35px #8b35c422;
+/* DIAGONAL GLITCH TEXT */
+
+.brand-wrap{
+  margin:45px 0 38px;
+  text-align:center;
   overflow:hidden;
 }
 
-.tag{
-  color:#d9a8ff;
-  font-size:11px;
-  letter-spacing:4px;
-  font-weight:bold;
-}
-
-.hero h1{
-  font-size:34px;
-  line-height:1.2;
-  margin:15px 0;
-  text-shadow:0 0 15px #b45cff99;
-}
-
-.hero p{
-  color:#b9a9c5;
-  line-height:1.7;
-}
-
-/* SECTION */
-
-.section-title{
-  margin-top:35px;
-  font-size:20px;
-  letter-spacing:1px;
-}
-
-/* PRODUCT CARD */
-
-.product{
+.brand{
   position:relative;
-  margin-top:18px;
-  padding:22px;
-  border-radius:17px;
-  background:linear-gradient(145deg,#21152cdd,#0e0a14ee);
-  border:1px solid #a855f766;
-  box-shadow:0 0 25px #8b35c422;
-  overflow:hidden;
-  transition:.3s;
+  display:inline-block;
+  font-size:clamp(29px,8vw,43px);
+  font-weight:1000;
+  letter-spacing:-1.5px;
+  line-height:1.2;
+  white-space:nowrap;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+  background:linear-gradient(
+    155deg,
+    #fff 0%,
+    #fff 49.5%,
+    #a855f7 50.5%,
+    #7025b8 100%
+  );
+  background-clip:text;
+  -webkit-background-clip:text;
+  filter:drop-shadow(0 0 9px #a855f766);
+  animation:glitchSwap 10s infinite;
 }
 
-.product:before{
-  content:"";
+.brand:before,
+.brand:after{
+  content:attr(data-text);
   position:absolute;
-  top:-100%;
-  left:-60%;
-  width:70%;
-  height:300%;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    #ffffff0d,
-    transparent
-  );
-  transform:rotate(30deg);
-  animation:shine 7s infinite;
+  inset:0;
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
   pointer-events:none;
 }
 
-@keyframes shine{
-  0%{left:-100%}
-  100%{left:160%}
+.brand:before{
+  background:linear-gradient(
+    155deg,
+    #a855f7 0%,
+    #7025b8 49.5%,
+    #fff 50.5%,
+    #fff 100%
+  );
+  opacity:0;
+  animation:glitchLayer 10s infinite;
 }
 
-.product h2{
-  color:white;
-  font-size:25px;
+.brand:after{
+  background:linear-gradient(
+    155deg,
+    #fff 0%,
+    #fff 49.5%,
+    #a855f7 50.5%,
+    #7025b8 100%
+  );
+  opacity:0;
+  animation:glitchFlicker 10s infinite;
+}
+
+@keyframes glitchSwap{
+  0%,94%,100%{
+    transform:translateX(0);
+  }
+  95%{transform:translateX(-4px) skewX(-5deg)}
+  96%{transform:translateX(5px) skewX(5deg)}
+  97%{transform:translateX(-2px)}
+  98%{transform:translateX(2px)}
+}
+
+@keyframes glitchLayer{
+  0%,47%,48%,100%{opacity:0}
+  49%{opacity:1;transform:translateX(-4px)}
+  50%{opacity:1;transform:translateX(4px)}
+  51%,95%{opacity:0}
+  96%{opacity:1;transform:translateX(-3px)}
+  97%{opacity:1;transform:translateX(3px)}
+  98%{opacity:0}
+}
+
+@keyframes glitchFlicker{
+  0%,47%,51%,95%,98%,100%{opacity:0}
+  49%,50%,96%,97%{opacity:.8}
+}
+
+.subtitle{
+  margin-top:12px;
+  color:#a895b7;
+  font-size:10px;
+  letter-spacing:4px;
+}
+
+/* DASHBOARD CARDS */
+
+.card{
+  background:linear-gradient(145deg,#21152ddd,#100b18ee);
+  border:1px solid #a855f755;
+  border-radius:17px;
+  padding:22px;
+  margin-bottom:17px;
+  box-shadow:0 0 25px #8b35c422;
+  position:relative;
+  overflow:hidden;
+}
+
+.card:after{
+  content:"";
+  position:absolute;
+  width:150px;
+  height:150px;
+  top:-100px;
+  right:-70px;
+  background:#a855f722;
+  filter:blur(30px);
+}
+
+.card-label{
+  color:#c99aff;
+  font-size:11px;
+  font-weight:bold;
   letter-spacing:2px;
-  text-shadow:0 0 8px white,0 0 18px #a855f7;
-  animation:nameGlow 2.5s infinite alternate;
 }
 
-@keyframes nameGlow{
-  from{text-shadow:0 0 5px white,0 0 12px #9333ea}
-  to{text-shadow:0 0 12px white,0 0 25px #c084fc}
-}
-
-.product p{
-  color:#a99bb6;
-  font-size:13px;
-  line-height:1.6;
-}
-
-.price{
+.card-value{
+  margin-top:15px;
+  font-size:34px;
+  font-weight:1000;
   color:white;
-  font-size:27px;
-  font-weight:900;
-  text-shadow:0 0 12px #ffffff66;
-  margin:18px 0;
+  text-shadow:0 0 12px #ffffff55;
 }
 
-.duration{
-  color:#d4c3e5;
-  font-size:12px;
-  margin-bottom:15px;
+.card-icon{
+  float:right;
+  font-size:23px;
+  color:#c084fc;
 }
 
-/* DIAGONAL BUY BUTTON */
+/* BUTTONS */
 
-.buy-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
+.action{
+  width:100%;
+  padding:17px;
+  margin-top:12px;
+  border:1px solid #d7b2ff;
+  border-radius:5px;
+  font-size:13px;
+  font-weight:1000;
+  letter-spacing:1.5px;
+  cursor:pointer;
+  transition:.25s;
+  clip-path:polygon(0 0,100% 0,96% 100%,0 100%);
+}
+
+.history{
+  background:linear-gradient(110deg,#35104f,#8428d4);
+  color:white;
+  box-shadow:0 0 18px #a855f755;
 }
 
 .buy{
-  position:relative;
-  border:1px solid #d9b5ff;
   background:linear-gradient(
-    115deg,
-    #fff 0%,
-    #fff 48%,
-    #8428d4 49%,
-    #b66aff 100%
+    110deg,
+    white 0%,
+    white 49%,
+    #a855f7 50%,
+    #7025b8 100%
   );
   color:#220b36;
-  padding:14px 24px;
-  font-weight:1000;
-  font-size:13px;
-  letter-spacing:1px;
-  cursor:pointer;
-  clip-path:polygon(0 0,100% 0,88% 100%,0 100%);
-  box-shadow:0 0 15px #a855f799;
-  transition:.3s;
 }
 
-.buy:hover{
-  filter:brightness(1.3);
-  transform:translateY(-3px);
-}
-
-.buy:active{
-  transform:scale(.96);
-}
-
-/* STATUS */
-
-.success{
-  color:#48ff9b;
-  text-shadow:0 0 12px #00ff77;
-}
-
-.error{
-  color:#ff5353;
-  text-shadow:0 0 12px #ff2222;
-}
-
-/* INFO CARDS */
-
-.info{
-  margin-top:18px;
-  padding:20px;
-  border-radius:15px;
-  background:#ffffff08;
-  border:1px solid #a855f733;
-}
-
-.info p{
-  color:#b8a9c4;
-  font-size:13px;
-  line-height:1.8;
+.action:active{
+  transform:scale(.97);
 }
 
 footer{
   text-align:center;
-  padding:35px 15px;
-  color:#8f7c9d;
-  font-size:11px;
+  padding:35px 10px;
+  color:#806b90;
+  font-size:10px;
+  letter-spacing:2px;
 }
 
-@media(max-width:380px){
-  .hero h1{font-size:29px}
-  .buy{padding:12px 18px}
+@media(max-width:360px){
+  main{padding:15px}
+  .brand{font-size:28px}
 }
 </style>
 </head>
@@ -308,63 +289,83 @@ footer{
 
 <header>
   <div class="logo">LEGIT PANELS</div>
-  <div class="menu">☰</div>
+  <div class="menu" onclick="location.href='login.html'">☰</div>
 </header>
 
 <main>
 
-<section class="hero">
-  <div class="tag">PREMIUM ACCESS STORE</div>
-  <h1>WELCOME TO<br>LEGIT PANELS</h1>
-  <p>
-    Premium digital access.
-    Simple. Secure. Reliable.
-  </p>
-</section>
+  <section class="brand-wrap">
+    <div class="brand" data-text="LEGIT PANELS">
+      LEGIT PANELS
+    </div>
+    <div class="subtitle">PREMIUM DIGITAL ACCESS</div>
+  </section>
 
-<h2 class="section-title">AVAILABLE PANELS</h2>
+  <section class="card">
+    <span class="card-icon">◈</span>
+    <div class="card-label">WALLET BALANCE</div>
+    <div class="card-value" id="wallet">₹0.00</div>
+  </section>
 
-<!-- PRODUCT CARD -->
-<section class="product">
+  <section class="card">
+    <span class="card-icon">⌘</span>
+    <div class="card-label">KEYS BOUGHT</div>
+    <div class="card-value" id="keysBought">0</div>
+  </section>
 
-  <div class="tag">FEATURED PRODUCT</div>
+  <button class="action history"
+    onclick="location.href='history.html'">
+    PURCHASE HISTORY →
+  </button>
 
-  <h2>PHANTOM</h2>
-
-  <p>
-    Premium digital access and subscription information.
-  </p>
-
-  <div class="price">Set price in admin</div>
-
-  <div class="buy-row">
-    <div class="duration">Duration: Set in admin</div>
-    <button class="buy" onclick="buyPanel()">
-      BUY NOW
-    </button>
-  </div>
-
-</section>
-
-<section class="info">
-  <h3>WHY LEGIT PANELS?</h3>
-  <p>✦ Premium interface</p>
-  <p>✦ Customer account support</p>
-  <p>✦ Order status updates</p>
-  <p>✦ Secure account management</p>
-</section>
+  <button class="action buy"
+    onclick="location.href='products.html'">
+    BUY KEYS →
+  </button>
 
 </main>
 
 <footer>
   LEGIT PANELS © 2026
-  <p>Premium Digital Experience</p>
 </footer>
 
+<!-- Firebase customer dashboard connection -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
-function buyPanel(){
-  alert("Purchase system will be connected next.");
-}
+const firebaseConfig = {
+  apiKey: "YOUR_EXISTING_FIREBASE_API_KEY",
+  authDomain: "legit-panels.firebaseapp.com",
+  projectId: "legit-panels",
+  storageBucket: "legit-panels.firebasestorage.app",
+  messagingSenderId: "794565207727",
+  appId: "1:794565207727:web:0a179fb0495be1fe7dd65a"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+auth.onAuthStateChanged(async user => {
+  if (!user) {
+    location.href = "login.html";
+    return;
+  }
+
+  try {
+    const snapshot = await db.collection("purchases")
+      .where("uid", "==", user.uid)
+      .get();
+
+    document.getElementById("keysBought").textContent =
+      snapshot.size;
+  } catch (error) {
+    console.error("Purchase count error:", error);
+  }
+});
 </script>
 
 </body>
