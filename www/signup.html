@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>LEGIT PANELS - Sign Up</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;display:grid;
+ place-items:center;background:#080808;
+ color:white;font-family:Arial,sans-serif;
+}
+.card{
+ width:90%;max-width:380px;padding:28px;
+ background:#111;border:1px solid #e00020;
+ border-radius:15px;box-shadow:0 0 20px #e0002033;
+}
+h1{text-align:center;color:#ff1838}
+input,button{
+ width:100%;padding:14px;margin-top:14px;
+ border-radius:8px;
+}
+input{background:#080808;color:white;border:1px solid #444}
+button{background:#e00020;color:white;border:0;font-weight:bold}
+p{text-align:center;color:#aaa}
+a{color:#ff4058}
+#message{font-size:13px}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>LEGIT PANELS</h1>
+<h3>Create Account</h3>
+
+<input id="name" placeholder="Full name">
+<input id="email" type="email" placeholder="Email address">
+<input id="password" type="password" placeholder="Password (6+ characters)">
+
+<button id="signup">CREATE ACCOUNT</button>
+<p id="message"></p>
+<p>Already registered? <a href="login.html">Login</a></p>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+ apiKey: "AIzaSyBjtH-H8FtOFCzgoD1NxdLIv3ZGriO9w9E",
+ authDomain: "legit-panels.firebaseapp.com",
+ projectId: "legit-panels",
+ storageBucket: "legit-panels.firebasestorage.app",
+ messagingSenderId: "794565207727",
+ appId: "1:794565207727:web:0a179fb0495be1fe7dd65a",
+ measurementId: "G-KQJ59QXW75"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+document.getElementById("signup").onclick = async () => {
+ const name = document.getElementById("name").value.trim();
+ const email = document.getElementById("email").value.trim();
+ const password = document.getElementById("password").value;
+ const msg = document.getElementById("message");
+ const btn = document.getElementById("signup");
+
+ if(!name || !email || !password){
+   msg.textContent = "Please fill all fields.";
+   return;
+ }
+
+ if(password.length < 6){
+   msg.textContent = "Password must be at least 6 characters.";
+   return;
+ }
+
+ btn.disabled = true;
+ btn.textContent = "CREATING...";
+
+ try{
+   const result = await auth.createUserWithEmailAndPassword(email,password);
+   await result.user.updateProfile({displayName:name});
+
+   msg.textContent = "Account created successfully!";
+   msg.style.color = "#00ff80";
+
+   setTimeout(()=>{
+     window.location.href = "index.html";
+   },1200);
+
+ }catch(error){
+   msg.textContent = error.message;
+   msg.style.color = "#ff4058";
+   btn.disabled = false;
+   btn.textContent = "CREATE ACCOUNT";
+ }
+};
+</script>
+</body>
+</html>
