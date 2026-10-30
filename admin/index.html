@@ -3,131 +3,184 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LEGIT PANELS | Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LEGIT PANELS ADMIN</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#080808;color:white;
- font-family:Arial,sans-serif;
-}
-header{
- padding:22px;background:#111;
- border-bottom:1px solid #292929;
- color:#ff303b;font-size:23px;font-weight:bold;
-}
-main{padding:20px;max-width:850px;margin:auto}
-h2{font-size:23px}
-.muted{color:#999}
-.grid{
- display:grid;grid-template-columns:repeat(2,1fr);
- gap:12px;margin:20px 0;
-}
-.card{
- background:#151515;border:1px solid #303030;
- border-radius:12px;padding:18px;
-}
-.number{font-size:27px;color:#ff303b;font-weight:bold}
-label{display:block;margin:15px 0 7px;color:#bbb}
-input,select{
- width:100%;padding:14px;background:#101010;
- color:white;border:1px solid #444;
- border-radius:8px;font-size:15px;
-}
-button{
- padding:14px;background:#ed2733;color:white;
- border:0;border-radius:8px;font-weight:bold;
- width:100%;margin-top:15px;font-size:15px;
-}
-button:active{opacity:.8}
-.section{margin-top:30px}
-.notice{
- padding:13px;background:#241416;
- border:1px solid #69252b;border-radius:9px;
- color:#ff9299;font-size:13px;line-height:1.5;
-}
-@media(max-width:400px){
- .grid{grid-template-columns:1fr}
-}
+body{margin:0;background:#080808;color:white;font-family:Arial,sans-serif}
+header{padding:20px;background:#111;border-bottom:1px solid #e22;color:#ff3945;font-size:22px;font-weight:bold}
+main{max-width:850px;margin:auto;padding:20px}
+.card{background:#151515;border:1px solid #333;border-radius:12px;padding:18px;margin:16px 0}
+h2{font-size:20px}
+input{display:block;width:100%;padding:14px;margin:10px 0;background:#090909;color:white;border:1px solid #444;border-radius:8px;font-size:15px}
+button{background:#ed2733;color:white;border:0;padding:13px;border-radius:8px;font-weight:bold;cursor:pointer}
+.full{width:100%;margin-top:10px}
+.secondary{background:#292929}
+.delete{background:#a51e28;padding:8px}
+.item{padding:13px 0;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.muted{color:#999;font-size:13px}
+#dashboard{display:none}
+#status{color:#ff7777;font-size:13px}
 </style>
 </head>
 <body>
 <header>LEGIT PANELS <small style="font-size:12px;color:#aaa">ADMIN</small></header>
+
 <main>
+<section id="login" class="card">
+<h2>Admin Login</h2>
+<p class="muted">Sign in with your registered administrator account.</p>
+<input id="email" type="email" placeholder="Admin email">
+<input id="password" type="password" placeholder="Password">
+<button class="full" onclick="login()">LOGIN</button>
+<p id="loginStatus"></p>
+</section>
+
+<section id="dashboard">
 <h2>Dashboard</h2>
-<p class="muted">Welcome to your administration panel.</p>
+<p class="muted">Firebase connected admin panel</p>
 
-<div class="grid">
- <div class="card">
-  <p class="muted">Total Products</p>
-  <div class="number">0</div>
- </div>
- <div class="card">
-  <p class="muted">Total Orders</p>
-  <div class="number">0</div>
- </div>
- <div class="card">
-  <p class="muted">Active Licenses</p>
-  <div class="number">0</div>
- </div>
- <div class="card">
-  <p class="muted">Customers</p>
-  <div class="number">0</div>
- </div>
-</div>
-
-<div class="section card">
+<div class="card">
 <h2>Product Management</h2>
-<label>Product Name</label>
-<input id="product" placeholder="Enter product name">
-
-<label>Product Price (₹)</label>
-<input id="price" type="number" min="0" placeholder="Enter price">
-
-<button onclick="addProduct()">ADD PRODUCT</button>
-<div id="products" class="muted"></div>
+<input id="productName" placeholder="Product name">
+<input id="productPrice" type="number" min="0" step="0.01" placeholder="Price in ₹">
+<button class="full" onclick="addProduct()">ADD PRODUCT</button>
+<p id="productStatus" class="muted"></p>
 </div>
 
-<div class="section card">
-<h2>License Management</h2>
-<p class="muted">License creation will be connected to the secure backend.</p>
-<label>Customer ID</label>
-<input placeholder="Customer ID">
-<label>License Duration</label>
-<select>
-<option>1 Hour</option>
-<option>3 Hours</option>
-<option>1 Day</option>
-<option>7 Days</option>
-<option>30 Days</option>
-</select>
-<button onclick="alert('Connect the secure backend before issuing licenses.')">
-LICENSE MANAGEMENT
-</button>
+<div class="card">
+<h2>Products</h2>
+<p class="muted">Live products stored in Firestore</p>
+<div id="products">Loading products...</div>
 </div>
 
-<div class="section notice">
-<strong>Security notice</strong><br>
-This is the dashboard interface preview. Product data is temporary.
-Real admin authentication, customer records and license generation
-must be connected to a protected online backend.
-</div>
+<button class="full secondary" onclick="logout()">LOG OUT</button>
+</section>
 </main>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
 <script>
-function addProduct(){
- const name=document.getElementById('product').value.trim();
- const price=document.getElementById('price').value;
- if(!name || price==='' || Number(price)<0){
-  alert('Enter a valid product name and price.');
+const firebaseConfig = {
+  apiKey: "AIzaSyBjtH-H8FtOFCzgoD1NxdLIv3ZGriO9w9E",
+  authDomain: "legit-panels.firebaseapp.com",
+  projectId: "legit-panels",
+  storageBucket: "legit-panels.firebasestorage.app",
+  messagingSenderId: "794565207727",
+  appId: "1:794565207727:web:0a179fb0495be1fe7dd65a",
+  measurementId: "G-KQJ59QXW75"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let stopProducts = null;
+
+function showMessage(id,message){
+ document.getElementById(id).textContent=message;
+}
+
+function login(){
+ const email=document.getElementById('email').value.trim();
+ const password=document.getElementById('password').value;
+
+ showMessage('loginStatus','Signing in...');
+
+ auth.signInWithEmailAndPassword(email,password)
+ .catch(error=>showMessage('loginStatus',error.message));
+}
+
+function logout(){
+ auth.signOut();
+}
+
+auth.onAuthStateChanged(user=>{
+ if(stopProducts){
+  stopProducts();
+  stopProducts=null;
+ }
+
+ if(user){
+  document.getElementById('login').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+  loadProducts();
+ }else{
+  document.getElementById('login').style.display='block';
+  document.getElementById('dashboard').style.display='none';
+ }
+});
+
+function loadProducts(){
+ stopProducts=db.collection('products')
+ .orderBy('createdAt','desc')
+ .onSnapshot(snapshot=>{
+  const container=document.getElementById('products');
+  container.replaceChildren();
+
+  if(snapshot.empty){
+   container.textContent='No products added yet.';
+   return;
+  }
+
+  snapshot.forEach(doc=>{
+   const data=doc.data();
+
+   const item=document.createElement('div');
+   item.className='item';
+
+   const details=document.createElement('span');
+   details.textContent=data.name+' — ₹'+data.price;
+
+   const button=document.createElement('button');
+   button.className='delete';
+   button.textContent='DELETE';
+   button.onclick=()=>deleteProduct(doc.id);
+
+   item.append(details,button);
+   container.appendChild(item);
+  });
+ },error=>{
+  showMessage('productStatus',error.message);
+ });
+}
+
+async function addProduct(){
+ const name=document.getElementById('productName').value.trim();
+ const price=Number(document.getElementById('productPrice').value);
+
+ if(!name || !Number.isFinite(price) || price<0){
+  showMessage('productStatus','Enter a valid name and price.');
   return;
  }
- const item=document.createElement('p');
- item.textContent=name+' — ₹'+price;
- document.getElementById('products').appendChild(item);
- document.getElementById('product').value='';
- document.getElementById('price').value='';
+
+ try{
+  await db.collection('products').add({
+   name:name,
+   price:price,
+   createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  document.getElementById('productName').value='';
+  document.getElementById('productPrice').value='';
+  showMessage('productStatus','Product added successfully!');
+ }catch(error){
+  showMessage('productStatus',error.message);
+ }
+}
+
+async function deleteProduct(id){
+ if(!confirm('Delete this product?'))return;
+
+ try{
+  await db.collection('products').doc(id).delete();
+ }catch(error){
+  showMessage('productStatus',error.message);
+ }
 }
 </script>
 </body>
-  </html>
+</html>
